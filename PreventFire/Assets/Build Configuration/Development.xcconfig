@@ -1,0 +1,10 @@
+//
+//  Development.xcconfig
+//  PreventFire
+//
+//  Created by Shantaram Kokate on 2/15/19.
+//  Copyright © 2019 Shantaram Kokate. All rights reserved.
+//
+PF_APP_NAME = PreventFire
+PF_APP_VERSION = 1.0.3
+PF_APP_BUNDLE_ID = com.preventfire
