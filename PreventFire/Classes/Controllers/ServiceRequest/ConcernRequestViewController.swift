@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import GoogleMaps
 
-class ConcernRequestViewController: AbstractViewController {
+class ConcernRequestViewController: AbstractViewController, UITextFieldDelegate {
     
     // MARK: - IBOutlet
     
@@ -41,6 +41,10 @@ class ConcernRequestViewController: AbstractViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+            tapGesture.cancelsTouchesInView = false
+            view.addGestureRecognizer(tapGesture)
         
         // Do any additional setup after loading the view.
         configureUI()
@@ -104,8 +108,9 @@ extension ConcernRequestViewController {
     }
     
     private func setupTextField() {
-       // peopleCountTextField.configureTextField(text: LocalizedStrings.numberOfPeople, color: .white, font: FontStyle(family: .poppins, type: .light, size: .pt14), delegate: self)
+        // peopleCountTextField.configureTextField(text: LocalizedStrings.numberOfPeople, color: .white, font: FontStyle(family: .poppins, type: .light, size: .pt14), delegate: self)
         buildingNameTextField.configureTextField(text: LocalizedStrings.buildingNumber, color: .white, font: FontStyle(family: .poppins, type: .light, size: .pt14), delegate: self)
+        
     }
     
     private func setupTextView() {
@@ -133,11 +138,11 @@ extension ConcernRequestViewController {
             kGOOGLEMAPKEY = "AIzaSyC631OGdyhCV_YsIzH0OA-fwvWLm3XWMrc"
         }
         GooglePlacesHandler.shared.provideAPIKey()
-
+        
         if kGOOGLEMAPKEY != "" {
             let coordinates =  CLLocationCoordinate2D(latitude: (locationManager.location?.coordinate.latitude)!, longitude: (locationManager.location?.coordinate.longitude)!)
             showLoader()
-
+            
             self.callGetAddressLocationAPI(from: coordinates) {address, error in
                 dismissLoader()
                 if error == false {
@@ -208,10 +213,8 @@ extension ConcernRequestViewController: UITextViewDelegate {
             }
         }
         
-        
-        
     }
-
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let newString = ((textView.text)! as NSString).replacingCharacters(in: range, with: text)
         if newString.count >= maxCharLimit {
@@ -227,28 +230,34 @@ extension ConcernRequestViewController: UITextViewDelegate {
 extension ConcernRequestViewController {
     
     func showCameraActionSheet() {
+        
         AttachmentHandler.shared.showAttachmentActionSheet(viewController: self)
         AttachmentHandler.shared.imagePickedBlock = { (image) in
+            print("Original image: \(image)")
+
             let chooseImage = image.resizeImage(targetSize: CGSize(width: 500, height: 600))
-            self.imageView.setImage(chooseImage, for: .normal)
-            self.didImageUploaded = true
-            self.callUploadImageAPI(chooseImage, handle: { (error) in
-            })
-            
+            print("Resized image: \(chooseImage)")
+
+            DispatchQueue.main.async {
+                print("imageView is: \(self.imageView == nil ? "nil" : "set")")
+                self.imageView.setImage(chooseImage, for: .normal) // or .image = chooseImage
+                self.didImageUploaded = true
+
+                self.callUploadImageAPI(chooseImage) { success in
+                    print(success ? "Upload successful" : "Upload failed")
+                }
+            }
         }
     }
+
     
     private func validateInputField() -> Bool {
         
         var isValidate = true
-        if self.didImageUploaded == false {
-            showAlert(message: AlertMessage.uploadPictureValidation, inViewController: self)
-            isValidate = false
-            
-        } else if (self.buildingNameTextField.text?.trim().isEmpty)! {
+        if (self.buildingNameTextField.text?.trim().isEmpty)! {
             showAlert(message: AlertMessage.buildingNumberDetails, inViewController: self)
             isValidate = false
-         } else if (self.locationTextField.text?.elementsEqual(LocalizedStrings.locationOfYourComplaintMessage))! {
+        } else if (self.locationTextField.text?.elementsEqual(LocalizedStrings.locationOfYourComplaintMessage))! {
             showAlert(message: AlertMessage.locationValidation, inViewController: self)
             isValidate = false
         } else if (self.descriptionTextField.text?.elementsEqual(LocalizedStrings.describeIssueMessage))! {
@@ -258,9 +267,9 @@ extension ConcernRequestViewController {
             showAlert(message: AlertMessage.subCategoryValidation, inViewController: self)
             isValidate = false
         } /* else if (self.peopleCountTextField.text?.trim().isEmpty)! {
-            showAlert(message: AlertMessage.numnerOfEffectedPersonValidation, inViewController: self)
-            isValidate = false
-        } */
+           showAlert(message: AlertMessage.numnerOfEffectedPersonValidation, inViewController: self)
+           isValidate = false
+           } */
         return isValidate
     }
     
@@ -287,32 +296,79 @@ extension ConcernRequestViewController {
         self.locationTextField.text = formattedAddress
     }
     
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }
 // MARK: - WebServices
 
 extension ConcernRequestViewController {
     
-    private func callUploadImageAPI(_ image: UIImage, handle:@escaping (Bool) -> Void) {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+
+    private func callUploadImageAPI(_ image: UIImage?, handle: @escaping (Bool) -> Void) {
+        
+        // If image is nil, skip upload and return success
+        guard let image = image else {
+            print("No image to upload. Skipping upload.")
+            handle(true) // or handle(false) depending on your logic
+            return
+        }
         
         showLoader()
         
-        let imagedata = image.jpegData(compressionQuality: 1)
+        guard let imagedata = image.jpegData(compressionQuality: 1.0) else {
+            print("Failed to convert image to JPEG.")
+            dismissLoader()
+            handle(false)
+            return
+        }
         
         let baseURL = APPURL.baseUrl()
-        let url =  String(format: "%@%@", baseURL, APIEndpoint.uploadComplaintImage)
+        let url = String(format: "%@%@", baseURL, APIEndpoint.uploadComplaintImage)
         
-        let parameter: NSDictionary = ["ImgKey": imagedata as Any]
-        
+        let parameter: NSDictionary = ["ImgKey": imagedata]
         let otherImages: [NSDictionary] = [["ImgKey": "photo", "ImgData": image]]
         
         ServiceRequestClient.uploadImageWithParameters(url: URL(string: url)!, parameters: parameter, otherImages: otherImages) { (dict, error, status) in
-            print(dict as Any)
             dismissLoader()
-            self.didImageUploaded = true
-            print(dict as Any)
-            self.imageId = dict!["photo"] as! String
+            
+            if let dict = dict, let imageId = dict["photo"] as? String {
+                self.didImageUploaded = true
+                self.imageId = imageId
+                handle(true)
+            } else {
+                print("Image upload failed: \(error?.localizedDescription ?? "Unknown error")")
+                handle(false)
+            }
         }
     }
+
+    
+//    private func callUploadImageAPI(_ image: UIImage, handle:@escaping (Bool) -> Void) {
+//        
+//        showLoader()
+//        
+//        let imagedata = image.jpegData(compressionQuality: 1)
+//        
+//        let baseURL = APPURL.baseUrl()
+//        let url =  String(format: "%@%@", baseURL, APIEndpoint.uploadComplaintImage)
+//        
+//        let parameter: NSDictionary = ["ImgKey": imagedata as Any]
+//        
+//        let otherImages: [NSDictionary] = [["ImgKey": "photo", "ImgData": image]]
+//        
+//        ServiceRequestClient.uploadImageWithParameters(url: URL(string: url)!, parameters: parameter, otherImages: otherImages) { (dict, error, status) in
+//            print(dict as Any)
+//            dismissLoader()
+//            self.didImageUploaded = true
+//            print(dict as Any)
+//            self.imageId = dict!["photo"] as! String
+//        }
+//    }
     
     private func callAddRequestAPI() {
         self.addRequest()
@@ -339,7 +395,7 @@ extension ConcernRequestViewController {
                                         request_type: "addenquiery")
         
         
-        let baseURL = "http://www.firetechcorporation.com/fireadmin/api/"
+        let baseURL = "https://www.firetechcorporations.com/fireadmin/api/"
         let url =  String(format: "%@", baseURL)
         let urlwithPercent = url.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)
         let urlPath = urlwithPercent

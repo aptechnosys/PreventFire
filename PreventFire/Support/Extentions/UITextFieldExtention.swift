@@ -97,6 +97,7 @@ extension UITextField {
         
         self.delegate = delegate as? UITextFieldDelegate
         
+        
     }
     
     /*
@@ -133,6 +134,7 @@ extension UITextField {
         self.borderStyle = .none
         self.tintColor = .white
         self.text = ""
+        self.delegate = delegate as? UITextFieldDelegate
     }
     
     func addBorderColor(color: UIColor, cornerRadius: Float) {
@@ -153,4 +155,14 @@ extension UITextField {
         maskLayer.path = path.cgPath
         self.layer.mask = maskLayer
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+
 }

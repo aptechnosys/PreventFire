@@ -670,8 +670,8 @@
 		56896D892202E2E9004C26F3 /* PreventFire */ = {
 			isa = PBXGroup;
 			children = (
-				D29E6E242E14D79000FBAA9C /* SlideMenu */,
 				56F8346D221AC3F00024A4C2 /* PreventFire.entitlements */,
+				D29E6E242E14D79000FBAA9C /* SlideMenu */,
 				56896D9C2202E3B0004C26F3 /* Classes */,
 				56896D912202E2F1004C26F3 /* Assets.xcassets */,
 				56896D932202E2F1004C26F3 /* LaunchScreen.storyboard */,

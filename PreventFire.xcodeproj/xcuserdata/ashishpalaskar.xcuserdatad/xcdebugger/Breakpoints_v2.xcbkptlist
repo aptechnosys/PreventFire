@@ -3,4 +3,52 @@
    uuid = "2086127C-DDC2-4B38-9F3A-4026CD998FEE"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3943B8D2-6E49-4855-A84A-CC183141C24B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PreventFire/Classes/Network/API Client/Requestable.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "performRequest(route:successCompletion:failureCompletion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3943B8D2-6E49-4855-A84A-CC183141C24B - fecddafb7d2f8855"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Alamofire.DataResponse&lt;Foundation.Data, Alamofire.AFError&gt;) -&gt; () in static PreventFire.Requestable.performRequest&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Decodable&gt;(route: PreventFire.APIConfiguration, successCompletion: (&#x3c4;_1_0) -&gt; (), failureCompletion: (PreventFire.General) -&gt; ()) -&gt; Alamofire.DataRequest"
+                  moduleName = "PreventFire.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ashishpalaskar/APTechnosys/Client%20Work/Fire%20Safe%20India%20Foundation/PreventFire/PreventFire/Classes/Network/API%20Client/Requestable.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "26"
+                  endingLineNumber = "26">
+               </Location>
+               <Location
+                  uuid = "3943B8D2-6E49-4855-A84A-CC183141C24B - 818c78fb5842b37a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 @Sendable (Alamofire.DataResponse&lt;Foundation.Data, Alamofire.AFError&gt;) -&gt; () in static PreventFire.Requestable.performRequest&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Decodable&gt;(route: PreventFire.APIConfiguration, successCompletion: (&#x3c4;_1_0) -&gt; (), failureCompletion: (PreventFire.General) -&gt; ()) -&gt; Alamofire.DataRequest"
+                  moduleName = "PreventFire.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ashishpalaskar/APTechnosys/Client%20Work/Fire%20Safe%20India%20Foundation/PreventFire/PreventFire/Classes/Network/API%20Client/Requestable.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

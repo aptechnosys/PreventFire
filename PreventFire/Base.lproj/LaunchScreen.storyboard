@@ -19,41 +19,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="yyH-YL-mXx">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splashscreen" translatesAutoresizingMaskIntoConstraints="NO" id="yyH-YL-mXx">
                                 <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="874" id="xCk-Rw-3p6"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Prevent Fire" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SMG-jo-3WU">
-                                <rect key="frame" x="101" y="520" width="200" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="jF6-Wv-ppR"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="26"/>
-                                <color key="textColor" red="0.80784313725490198" green="0.63529411764705879" blue="0.29411764705882354" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="uVU-Uw-K6c">
-                                <rect key="frame" x="101" y="312" width="200" height="200"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="2RE-8p-PN4"/>
-                                    <constraint firstAttribute="height" constant="200" id="gaL-Ue-chH"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="yyH-YL-mXx" secondAttribute="bottom" id="3wI-1c-ish"/>
-                            <constraint firstItem="SMG-jo-3WU" firstAttribute="top" secondItem="uVU-Uw-K6c" secondAttribute="bottom" constant="8" id="BWf-tV-ARt"/>
                             <constraint firstItem="yyH-YL-mXx" firstAttribute="trailing" secondItem="Ze5-6b-2t3" secondAttribute="trailing" id="DrF-ul-8al"/>
-                            <constraint firstItem="uVU-Uw-K6c" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="GID-bV-k1V"/>
-                            <constraint firstItem="uVU-Uw-K6c" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-25" id="O6G-vX-jlS"/>
-                            <constraint firstItem="SMG-jo-3WU" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="101" id="PW2-qP-EaV"/>
                             <constraint firstItem="yyH-YL-mXx" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="iJC-P0-qeB"/>
                             <constraint firstItem="yyH-YL-mXx" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="jqX-ec-Ag7"/>
-                            <constraint firstAttribute="trailing" secondItem="SMG-jo-3WU" secondAttribute="trailing" constant="101" id="nf0-Q3-tVG"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -63,7 +41,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="background" width="720" height="1280"/>
-        <image name="logo" width="512" height="512"/>
+        <image name="splashscreen" width="720" height="1280"/>
     </resources>
 </document>

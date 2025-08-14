@@ -5,8 +5,8 @@ extension HomeViewController {
     // MARK: - UI Configuration Methods
   
      func configureUI() {
-        setupView()
-        setupLabels()
+        //setupView()
+        //setupLabels()
         initializeNavigationBar()
         
     }
@@ -20,7 +20,7 @@ extension HomeViewController {
     
     private func setupLabels() {
         self.logoTitleLabel.configureLabel(title: LocalizedStrings.fireSafeIndiaFoundation, color: AppColor.Label.logoTitle, font: FontStyle(family: .poppins, type: .medium, size: .pt16), alignment: .center)
-        self.raiseVoiceLabel.configureLabel(title: LocalizedStrings.raiseYourVoiceForFireSafety, color: .black, font: FontStyle(family: .poppins, type: .medium, size: .pt14), alignment: .center)
+        self.raiseVoiceLabel.configureLabel(title: LocalizedStrings.raiseYourVoiceForFireSafety, color: .white, font: FontStyle(family: .poppins, type: .bold, size: .pt14), alignment: .center)
     }
     
     func setupView() {

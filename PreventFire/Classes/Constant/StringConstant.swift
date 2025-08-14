@@ -31,7 +31,7 @@ struct LocalizedStrings {
     static let alerts = "ALERTS".localized()
     static let profile = "PROFILE".localized()
     static let languageSetting = "LANGUAGE SETTING".localized()
-    static let signout = "SING OUT".localized()
+    static let signout = "SIGN OUT".localized()
     static let notifications = "notifications".localized()
     static let notificationAccessMessage = "notificationAccessMessage".localized()
     
@@ -59,7 +59,7 @@ struct LocalizedStrings {
     static let nameText = "Name".localized()
     static let confirmPassword = "Confirm Password".localized()
     static let countryCode = "+91".localized()
-    static let firstNameText = "Frist Name".localized()
+    static let firstNameText = "First Name".localized()
     static let lastNameText = "Last Name".localized()
 
     // MARK: - Camera And Gallery Permission

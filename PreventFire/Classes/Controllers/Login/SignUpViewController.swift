@@ -18,13 +18,13 @@ class SignUpViewController: AbstractViewController {
     
     @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var lastNameTextField: UITextField!
-
+    
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var mobileNumberTextField: UITextField!
     @IBOutlet weak var countryCodeTextField: UIButton!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
-
+    
     @IBOutlet weak var titleLabel: UILabel!
     
     var didImageUploaded = false
@@ -38,18 +38,26 @@ class SignUpViewController: AbstractViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+            tapGesture.cancelsTouchesInView = false
+            view.addGestureRecognizer(tapGesture)
+        
         configureUI()
         // Do any additional setup after loading the view.
         callCountryListAPI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-       // self.configureNavbarLeftButton(imageName: "back_white")
+        // self.configureNavbarLeftButton(imageName: "back_white")
         self.addbackButton()
-
+        
     }
-
-  
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
 }
 
 // MARK: - Configure UI
@@ -88,7 +96,7 @@ extension SignUpViewController {
         confirmPasswordTextField.addLeftImage(name: "password")
         
         countryCodeTextField.configureButtonWithTitle(title: LocalizedStrings.countryCode, titleColor: AppColor.TextField.placeholderColor, backgroundColor: AppColor.primaryColor, font: FontStyle(family: .poppins, type: .regular, size: .pt16))
-
+        
     }
     
     private func setupButtons() {
@@ -117,12 +125,12 @@ extension SignUpViewController {
         ]
         
         paymentModeDropDown.direction = .bottom
-
+        
         
         // Action triggered on selection
         paymentModeDropDown.selectionAction = { [weak self] (index, item) in
             self?.countryCodeTextField.setTitle(item, for: .normal)
-           // self!.updateUI(selectedPaymentOption: item)
+            // self!.updateUI(selectedPaymentOption: item)
         }
     }
     
@@ -172,10 +180,10 @@ extension SignUpViewController {
     private func isValidInput() -> Bool {
         
         var isValid: Bool = true
-       /* if self.didImageUploaded == false {
-            showAlert(message: AlertMessage.uploadPictureValidation, inViewController: self)
-            isValid = false
-        } */
+        /* if self.didImageUploaded == false {
+         showAlert(message: AlertMessage.uploadPictureValidation, inViewController: self)
+         isValid = false
+         } */
         if (firstNameTextField.text?.isEmpty)! {
             showAlert(message: AlertMessage.nameValidation, inViewController: self)
             isValid = false
@@ -225,7 +233,7 @@ extension SignUpViewController {
 //MARK: - Webservice
 
 extension SignUpViewController {
-
+    
     private func callUploadImageAPI(_ image: UIImage, handle:@escaping (Bool) -> Void) {
         
         showLoader()
@@ -268,9 +276,8 @@ extension SignUpViewController {
                 self.saveUserData(result.message!)
                 AppDelegate.delegate()?.setRootMenuViewController()
             } else {
-                 showAlert(message: "Error! Something unexpected happened. Please try again later.", inViewController: self)
-             }
-           
+                showAlert(message: "Error! Something unexpected happened. Please try again later.", inViewController: self)
+            }
             
             dismissLoader()
             
@@ -290,16 +297,16 @@ extension SignUpViewController {
             return
         }
         showLoader()
-         LoginClient.countryList(loginRouter: LoginRouter.countryList,
-                                                   successCompletion: { (result) in
-                                                    dismissLoader()
-                                                    if result.count != 0 {
-                                                        self.paymentModeDropDown.dataSource = result.map { $0.countrycode ?? "" }
-                                                     }
+        LoginClient.countryList(loginRouter: LoginRouter.countryList,
+                                successCompletion: { (result) in
+            dismissLoader()
+            if result.count != 0 {
+                self.paymentModeDropDown.dataSource = result.map { $0.countrycode ?? "" }
+            }
         }, failureCompletion: { (error) in
             dismissLoader()
             showAlert(message: error, inViewController: self)
-         })
+        })
     }
 }
 
@@ -307,14 +314,19 @@ extension SignUpViewController {
 
 extension SignUpViewController: UITextFieldDelegate {
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
-       /* if textField == self.countryCodeTextField {
-            self.countryCodeTextField.text = countryCodeList[0]
-        } */
+        /* if textField == self.countryCodeTextField {
+         self.countryCodeTextField.text = countryCodeList[0]
+         } */
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-          if textField == countryCodeTextField {
+        if textField == countryCodeTextField {
             let textFieldValidationModel = TextFieldRangeValidationModel(textField: textField, range: range, string: string, minLimit: 0, maxLimit: 3, replacingCharacter: "+")
             return textField.setTextfieldLimit(textFieldModel: textFieldValidationModel)
         }

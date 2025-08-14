@@ -28,54 +28,38 @@ class AttachmentHandler: NSObject {
     var filePickedBlock: ((URL) -> Void)?
     
     func showAttachmentActionSheet(viewController: UIViewController) {
-        currentVC = viewController
-        
-        let actionSheetController: UIAlertController = UIAlertController(title: LocalizedStrings.cameraOption, message: LocalizedStrings.cameraSelectImage, preferredStyle: UIAlertController.Style.actionSheet)
-        let cancelAction: UIAlertAction = UIAlertAction(title: LocalizedStrings.cameraCancel, style: .cancel) { _ -> Void in
+            currentVC = viewController
+            let actionSheet = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
+            
+            actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
+                self.authorisationStatus(attachmentTypeEnum: .camera, viewController: viewController)
+            }))
+            
+            actionSheet.addAction(UIAlertAction(title: "Gallery", style: .default, handler: { _ in
+                self.authorisationStatus(attachmentTypeEnum: .photoLibrary, viewController: viewController)
+            }))
+            
+            actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            
+            viewController.present(actionSheet, animated: true)
         }
-        
-        actionSheetController.addAction(cancelAction)
-        let takePictureAction: UIAlertAction = UIAlertAction(title: LocalizedStrings.cameraTakePicture, style: .default) { _ -> Void in
-            self.authorisationStatus(attachmentTypeEnum: .camera, viewController: self.currentVC!)
-        }
-        actionSheetController.addAction(takePictureAction)
-        
-        let choosePictureAction: UIAlertAction = UIAlertAction(title: LocalizedStrings.selectFromCamraRool, style: .default) { _ -> Void in
-            self.authorisationStatus(attachmentTypeEnum: .photoLibrary, viewController: self.currentVC!)
-        }
-        actionSheetController.addAction(choosePictureAction)
-        
-        // Hide the video and file picker option
-        /*
-        let chooseVideoAction: UIAlertAction = UIAlertAction(title: LocalizedStrings.selectFromCamraRool, style: .default) { _ -> Void in
-            self.authorisationStatus(attachmentTypeEnum: .video, viewController: self.currentVC!)
-        }
-        actionSheetController.addAction(chooseVideoAction)
-        
-        let chooseFileAction: UIAlertAction = UIAlertAction(title: LocalizedStrings.selectFromCamraRool, style: .default) { _ -> Void in
-            self.documentPicker()
-        }
-        actionSheetController.addAction(chooseFileAction) */
-        viewController.present(actionSheetController, animated: true, completion: nil)
-    }
+
     
     func authorisationStatus(attachmentTypeEnum: AttachmentType, viewController: UIViewController) {
-        currentVC = viewController
-        switch attachmentTypeEnum {
-        case .camera:
-            self.showCameraPermissionPopup(attachmentTypeEnum: attachmentTypeEnum)
-        case .photoLibrary, .video:
-            self.showphotoLibraryPermissionPopup(attachmentTypeEnum: attachmentTypeEnum)
+            let picker = UIImagePickerController()
+            picker.delegate = self
+            picker.sourceType = (attachmentTypeEnum == .camera) ? .camera : .photoLibrary
+            currentVC?.present(picker, animated: true)
         }
-        
-    }
     
     func openCamera() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            let myPickerController = UIImagePickerController()
-            myPickerController.delegate = self
-            myPickerController.sourceType = .camera
-            currentVC?.present(myPickerController, animated: true, completion: nil)
+            DispatchQueue.main.async {
+                let myPickerController = UIImagePickerController()
+                myPickerController.delegate = self
+                myPickerController.sourceType = .camera
+                self.currentVC?.present(myPickerController, animated: true, completion: nil)
+            }
         }
     }
     
@@ -101,10 +85,12 @@ class AttachmentHandler: NSObject {
     
     func photoLibrary() {
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-            let myPickerController = UIImagePickerController()
-            myPickerController.delegate = self
-            myPickerController.sourceType = .photoLibrary
-            currentVC?.present(myPickerController, animated: true, completion: nil)
+            DispatchQueue.main.async {
+                let myPickerController = UIImagePickerController()
+                myPickerController.delegate = self
+                myPickerController.sourceType = .photoLibrary
+                self.currentVC?.present(myPickerController, animated: true, completion: nil)
+            }
         }
     }
     
@@ -172,15 +158,17 @@ extension AttachmentHandler {
 
 extension AttachmentHandler: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
+    internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+
+        picker.dismiss(animated: true, completion: nil)
         
         // To handle image
-        if let image = info[UIImagePickerController.InfoKey.originalImage.rawValue] as? UIImage {
+        if let image = info[.originalImage] as? UIImage {
             self.imagePickedBlock?(image)
         } else {
         }
         // To handle video
-        if let videoUrl = info[UIImagePickerController.InfoKey.mediaURL.rawValue] as? NSURL {
+        if let videoUrl = info[.mediaURL] as? NSURL {
             //trying compression of video
             let data = NSData(contentsOf: videoUrl as URL)!
             print("File size before compression: \(Double(data.length / 1048576)) mb")

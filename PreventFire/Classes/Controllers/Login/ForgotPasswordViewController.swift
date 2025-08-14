@@ -58,9 +58,17 @@ class ForgotPasswordViewController: AbstractViewController {
         })
     }
     
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }
 
-extension ForgotPasswordViewController {
+extension ForgotPasswordViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
     
     private func configureUI() {
         setupUIComponents()
@@ -80,7 +88,6 @@ extension ForgotPasswordViewController {
     
     private func setupTextFields() {
         emailTextField.configureDarkThemeTextField(text: LocalizedStrings.emailAddress, delegate: self)
-        
         emailTextField.addLeftImage(name: "email")
     }
     

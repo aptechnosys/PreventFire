@@ -9,15 +9,14 @@
 import UIKit
 
 class ProfileViewController: AbstractViewController {
-
+    
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var userImageView: UIImageView!
     
     @IBOutlet weak var titleLabel: UILabel!
     
     @IBOutlet weak var firstNameTextField: UITextField!
-    @IBOutlet weak var lastNameTextField: UITextField!
-
+    
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var mobileNumberTextField: UITextField!
     
@@ -36,22 +35,23 @@ class ProfileViewController: AbstractViewController {
     
     func setUserDetails() {
         firstNameTextField.text = UserDefaults.standard.getUserName() ?? ""
-        lastNameTextField.text = UserDefaults.standard.getLastName() ?? ""
         emailTextField.text = UserDefaults.standard.getEmailNumber() ?? ""
         let countryCode = UserDefaults.standard.getcountryCode() ?? "91"
         let mobileNumber = UserDefaults.standard.getMobileNumber() ?? ""
-         var mobileWithCountryCode = ""
+        var mobileWithCountryCode = ""
+
         if countryCode.isEmpty {
             mobileWithCountryCode = "+91 " + mobileNumber
         } else {
             mobileWithCountryCode = "+" + countryCode + " " + mobileNumber
         }
-         mobileNumberTextField.text = mobileWithCountryCode
-
+        
+        mobileNumberTextField.text = mobileWithCountryCode
+        
         let url = URL(string: UserDefaults.standard.getImageUrl() ?? "")
         self.userImageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "addUser"), options: .refreshCached, completed: nil)
     }
-
+    
 }
 
 extension ProfileViewController {
@@ -63,7 +63,7 @@ extension ProfileViewController {
     }
     
     private func setupLabel () {
-     titleLabel.configureLabel(title: LocalizedStrings.fireSafeIndiaFoundation, color: AppColor.Label.logoTitle, font: FontStyle(family: .poppins, type: .medium, size: .pt16), alignment: .center)
+        titleLabel.configureLabel(title: LocalizedStrings.fireSafeIndiaFoundation, color: AppColor.Label.logoTitle, font: FontStyle(family: .poppins, type: .medium, size: .pt16), alignment: .center)
     }
     
     private func setupUIComponents() {
@@ -77,28 +77,26 @@ extension ProfileViewController {
     
     private func setupTextFields() {
         firstNameTextField.configureDarkThemeTextField(text: LocalizedStrings.nameText, delegate: self)
-        lastNameTextField.configureDarkThemeTextField(text: LocalizedStrings.nameText, delegate: self)
         emailTextField.configureDarkThemeTextField(text: LocalizedStrings.emailAddress, delegate: self)
         mobileNumberTextField.configureDarkThemeTextField(text: LocalizedStrings.mobileNoText, delegate: self)
+        
         firstNameTextField.addLeftImage(name: "name")
-        lastNameTextField.addLeftImage(name: "name")
         emailTextField.addLeftImage(name: "email")
         mobileNumberTextField.addLeftImage(name: "mobile")
         
         firstNameTextField.isUserInteractionEnabled = false
         emailTextField.isUserInteractionEnabled = false
         mobileNumberTextField.isUserInteractionEnabled = false
-        lastNameTextField.isUserInteractionEnabled = false
-
+        
     }
-
+    
     private func setupNavigationBar() {
         if isFromMenuView {
             addLeftMenuItem()
             setTransparentNavigationBar()
             setNavigationBarTitle(LocalizedStrings.profile)
             configureNavbarTitle(LocalizedStrings.profile)
-
+            
         } else {
             setTransparentNavigationBar()
             setNavBarTitle(LocalizedStrings.profile)

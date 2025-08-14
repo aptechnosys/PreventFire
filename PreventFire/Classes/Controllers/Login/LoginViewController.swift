@@ -1,6 +1,6 @@
 import UIKit
 
-class LoginViewController: AbstractViewController {
+class LoginViewController: AbstractViewController, UITextFieldDelegate {
     
     @IBOutlet weak var iconImageView: UIImageView!
     
@@ -17,8 +17,17 @@ class LoginViewController: AbstractViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+           tapGesture.cancelsTouchesInView = false
+           view.addGestureRecognizer(tapGesture)
+       
+        
         configureUI()
         // Do any additional setup after loading the view.
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
 }
@@ -49,10 +58,8 @@ extension LoginViewController {
         emailTextField.addLeftImage(name: "email")
         passwordTextField.addLeftImage(name: "password")
         
-        //emailTextField.text = "ashu548@yahoo.com"
-        //passwordTextField.text = "Ashish@007"
-        
         emailTextField.roundCorners(10)
+
     }
     
     private func setupButtons() {
@@ -150,6 +157,11 @@ extension LoginViewController {
 
 extension LoginViewController {
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
     func callSignInAPI() {
         
         showLoader()
@@ -157,6 +169,7 @@ extension LoginViewController {
         LoginClient.login(loginRouter: LoginRouter.login(email: emailTextField.text!, password: passwordTextField.text!), successCompletion: { (result) in
 
             print(result)
+            
             if result.status == 404 {
                 showAlert(message: result.message?.message ?? "", inViewController: self)
             } else if result.uid != nil {

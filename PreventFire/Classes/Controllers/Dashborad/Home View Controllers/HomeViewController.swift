@@ -38,7 +38,6 @@ class HomeViewController: AbstractViewController {
         self.navigationController?.navigationBar.isHidden = false
     }
     
-    
 }
 
 // MARK: - Action Handler
